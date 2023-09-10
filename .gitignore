@@ -2,3 +2,8 @@
 /.idea
 /*.iml
 /bin/
+
+# Eclipse IDE
+*.classpath
+*.project
+*.settings/
