@@ -122,28 +122,72 @@ public class Menu {
 		int opcao = Integer.parseInt(sc.nextLine());
 
 		switch (opcao) {
-		case 1:
-			// cadastrar pessoa
-			break;
-		case 2:
-			System.out.print("Digite o cpf ou cnpj da pessoa:");
-			Pessoa pessoa = locadora.getControlePessoa().buscar(sc.nextLine());
-			System.out.println("Informações da pessoa:\n" + pessoa);
-			break;
-		case 3:
-			// alterar pessoa
-			break;
-		case 4:
-			System.out.println(locadora.getControlePessoa().listar());
-			break;
-		case 5:
-			return;
-		case 9:
-			System.exit(0);
-		default: 
-			System.out.println("Opção inválida, digite novamente:");
-			break;
-		}
+			case 1:
+				System.out.print("CPF ou CNPJ da pessoa: ");
+				String id = sc.nextLine();
+				System.out.print("Nome da pessoa: ");
+				String nome = sc.nextLine();
+				System.out.print("Contato da pessoa: ");
+				String contato = sc.nextLine();
+				System.out.print("Endereço da pessoa: ");
+				String endereco = sc.nextLine();
+
+				// Verifique se a pessoa já existe
+				Pessoa pessoaExistente = locadora.getControlePessoa().buscar(id);
+				if (pessoaExistente != null) {
+					System.out.println("Pessoa já cadastrada com este CPF ou CNPJ.");
+				} else {
+					Pessoa novaPessoa;
+					if (id.length() == 11) { // CPF tem 11 caracteres
+						novaPessoa = new PessoaFisica(id, nome, contato, endereco);
+					} else if (id.length() == 14) { // CNPJ tem 14 caracteres
+						novaPessoa = new PessoaJuridica(id, nome, contato, endereco);
+					} else {
+						System.out.println("CPF ou CNPJ inválido.");
+						break;
+					}
+
+					locadora.getControlePessoa().cadastrar(novaPessoa);
+					System.out.println("Pessoa cadastrada com sucesso.");
+				}
+				break;
+
+
+
+			case 2:
+				System.out.print("Digite o cpf ou cnpj da pessoa:");
+				Pessoa pessoa = locadora.getControlePessoa().buscar(sc.nextLine());
+				System.out.println("Informações da pessoa:\n" + pessoa);
+				break;
+			case 3:
+				System.out.print("Digite o CPF ou CNPJ da pessoa que deseja alterar: ");
+				String novoId = sc.nextLine();
+				Pessoa pessoaParaAlterar = locadora.getControlePessoa().buscar(novoId);
+
+				if (pessoaParaAlterar != null) {
+					System.out.print("Novo endereço: ");
+					String novoEndereco = sc.nextLine();
+					System.out.print("Novo contato: ");
+					String novoContato = sc.nextLine();
+
+					locadora.getControlePessoa().alterar(novoId, novoEndereco, novoContato);
+					System.out.println("Pessoa alterada com sucesso.");
+				} else {
+					System.out.println("Pessoa não encontrada.");
+				}
+				break;
+
+			case 4:
+				System.out.println(locadora.getControlePessoa().listar());
+				break;
+			case 5:
+				return;
+			case 9:
+				System.exit(0);
+			default:
+				System.out.println("Opção inválida, digite novamente:");
+				break;
+			}
 	}
 
 	private static void menuPrincipal() {
