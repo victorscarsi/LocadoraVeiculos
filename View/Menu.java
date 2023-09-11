@@ -2,9 +2,9 @@ import java.util.Scanner;
 
 public class Menu {
 	private static Scanner sc = new Scanner(System.in);
+	private static LocadoraDeVeiculos locadora = new LocadoraDeVeiculos();
 
 	public static void main(String[] args) {
-		LocadoraDeVeiculos locadora = new LocadoraDeVeiculos();
 
 		while (true) {
 			menuPrincipal();
@@ -52,15 +52,20 @@ public class Menu {
 				// alugarCarro
 				break;
 			case 2:
-				// buscar locação
+				System.out.print("Digite o ID da locação:");
+				Locacao locacao = locadora.buscarLocacao(sc.nextLine());
+				System.out.println("Informações da locação:\n" + locacao);
 				break;
 			case 3:
-				// listar locaçao
+				System.out.println(locadora.listar());
 				break;
 			case 4:
 				return;
 			case 9:
 				System.exit(0);
+			default: 
+				System.out.println("Opção inválida, digite novamente:");
+				break;
 			}
 		}
 	}
@@ -83,18 +88,23 @@ public class Menu {
 				// cadastrar carro
 				break;
 			case 2:
-				// buscar carro
+				System.out.print("Digite a placa do veículo:");
+				Veiculo veiculo = locadora.getControleVeiculo().buscar(sc.nextLine());
+				System.out.println("Informações do veículo:\n" + veiculo);
 				break;
 			case 3:
 				// alterar carro
 				break;
-			case 4: 
-				// listar carros
+			case 4:
+				System.out.println(locadora.getControleVeiculo().listar());
 				break;
 			case 5:
 				return;
 			case 9:
 				System.exit(0);
+			default: 
+				System.out.println("Opção inválida, digite novamente:");
+				break;
 			}
 		}
 	}
@@ -108,26 +118,31 @@ public class Menu {
 		System.out.println("4 - listar");
 		System.out.println("5 - Retornar ao menu anterior");
 		System.out.println("9 - sair");
-		
+
 		int opcao = Integer.parseInt(sc.nextLine());
-		
+
 		switch (opcao) {
 		case 1:
 			// cadastrar pessoa
 			break;
 		case 2:
-			// buscar pessoa
+			System.out.print("Digite o cpf ou cnpj da pessoa:");
+			Pessoa pessoa = locadora.getControlePessoa().buscar(sc.nextLine());
+			System.out.println("Informações da pessoa:\n" + pessoa);
 			break;
 		case 3:
 			// alterar pessoa
 			break;
-		case 4: 
-			// listar pessoas
+		case 4:
+			System.out.println(locadora.getControlePessoa().listar());
 			break;
 		case 5:
 			return;
 		case 9:
 			System.exit(0);
+		default: 
+			System.out.println("Opção inválida, digite novamente:");
+			break;
 		}
 	}
 
