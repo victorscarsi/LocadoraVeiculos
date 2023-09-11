@@ -7,8 +7,8 @@ public interface Gerenciador<T, S> {
 	public T buscar(S id);
 	
 	public List<T> listar();
-	
-	public void alterar(S id);
+
+	public void alterar(S id, Object... parametros);
 	
 	public void excluir(S id);
 }
