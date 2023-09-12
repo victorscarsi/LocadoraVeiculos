@@ -29,7 +29,7 @@ public class GerenciarVeiculo implements Gerenciador<Veiculo, String>{
 		Veiculo veiculoParaAlterar = buscar(placa);
 		if (veiculoParaAlterar != null) {
 			// Inverte o valor de estaAlugado
-			veiculoParaAlterar.setEstaAlugado(!veiculoParaAlterar.isEstaAlugado());
+			veiculoParaAlterar.setEstaAlugado(!veiculoParaAlterar.isAlugado());
 		}
 	}
 

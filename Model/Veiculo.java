@@ -27,7 +27,7 @@ public class Veiculo {
         this.placa = placa;
     }
 
-    public boolean isEstaAlugado() {
+    public boolean isAlugado() {
         return estaAlugado;
     }
 

@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,12 +11,22 @@ public class LocadoraDeVeiculos {
 		// Carregar BD na listaLocacoes
 	}
 
-	public boolean alugar(Pessoa pessoa, Veiculo veiculo) {
-		return false;
+	public void alugar(Pessoa pessoa, Veiculo veiculo, String agencia, LocalDateTime retirada) throws Exception {
+		if (veiculo.isAlugado()) {
+			throw new Exception("Veículo já está alugado! Selecione outro.");
+		} else {
+			Locacao novaLocacao = new Locacao(pessoa, veiculo, agencia, retirada);
+			listaLocacoes.add(novaLocacao);
+		}
 	}
 
-	public Locacao buscarLocacao(String id) {
-		return null;
+	public Locacao buscarLocacao(long id) {
+		for (Locacao locacao: listaLocacoes) {
+			if (locacao.getIdLocacao() == id) {
+				return locacao;
+			}
+		}
+		return null; // Retorna null se não encontrar nenhuma locação com o ID informado.
 	}
 
 	public List<Locacao> listar() {
