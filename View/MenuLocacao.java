@@ -23,6 +23,9 @@ public class MenuLocacao {
 				listarLocacoes();
 				break;
 			case 4:
+				finalizarLocacao();
+				break;
+			case 5:
 				return;
 			case 9:
 				Menu.sc.close();
@@ -35,12 +38,37 @@ public class MenuLocacao {
 		}
 	}
 
+	public static void finalizarLocacao() {
+	    String idLocacao = Menu.obterEntrada("Por favor, insira o ID da locação:");
+	    
+	    Locacao locacao = Menu.locadora.buscarLocacao(Long.parseLong(idLocacao));
+	    System.out.println(locacao);
+	    Menu.sc.nextLine();
+
+	    if (locacao != null) {
+	        String dataHoraDevolucao = Menu.obterEntrada("Por favor, insira a data e hora da devolução no formato 'dd/mm/aaaa HH:mm':");
+
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+	        LocalDateTime devolucao = LocalDateTime.parse(dataHoraDevolucao, formatter);
+
+	        try {
+	            locacao.finalizarLocacao(devolucao);
+	            System.out.println("Locação finalizada com sucesso!");
+	        } catch (Exception e) {
+	            System.out.println(e.getMessage());
+	        }
+	    } else {
+	        System.out.println("Não foi possível encontrar uma locação com o ID fornecido.");
+	    }
+	}
+
 	private static void mostrarMenuLocacao() {
 		System.out.println("\n----Gerenciar Locação----");
 		System.out.println("1 - alugar");
 		System.out.println("2 - buscar");
 		System.out.println("3 - listar");
-		System.out.println("4 - Retornar ao menu anterior");
+		System.out.println("4 - finalizar locação");
+		System.out.println("5 - Retornar ao menu anterior");
 		System.out.println("9 - sair");
 	}
 
