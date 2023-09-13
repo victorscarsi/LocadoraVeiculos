@@ -4,16 +4,9 @@ public class MenuVeiculo {
 
 	public static void menuVeiculo() {
 		while (true) {
-			System.out.println("----Gerenciar Veiculo----");
-			System.out.println("Por favor escolha uma opção:");
-			System.out.println("1 - cadastrar");
-			System.out.println("2 - buscar");
-			System.out.println("3 - alterar");
-			System.out.println("4 - listar");
-			System.out.println("5 - Retornar ao menu anterior");
-			System.out.println("9 - sair");
+			mostrarMenuVeiculo();
 
-			int opcao = Integer.parseInt(Menu.sc.nextLine());
+			int opcao = Integer.parseInt(Menu.obterEntrada("Por favor escolha uma opção: "));
 
 			switch (opcao) {
 			case 1:
@@ -23,7 +16,8 @@ public class MenuVeiculo {
 				buscarVeiculo();
 				break;
 			case 3:
-				// alterar carro (falta fazer)
+				String placa = Menu.obterEntrada("Digite a placa do carro que deseja alterar o status");
+				Menu.locadora.getControleVeiculo().alterar(placa);
 				break;
 			case 4:
 				listarVeiculos();
@@ -40,12 +34,20 @@ public class MenuVeiculo {
 		}
 	}
 
-	private static void cadastrarVeiculo() {
-		System.out.println("Digite a placa do veículo:");
-		String placa = Menu.sc.nextLine();
+	private static void mostrarMenuVeiculo() {
+		System.out.println("\n----Gerenciar Veiculo----");
+		System.out.println("1 - cadastrar");
+		System.out.println("2 - buscar");
+		System.out.println("3 - alterar");
+		System.out.println("4 - listar");
+		System.out.println("5 - Retornar ao menu anterior");
+		System.out.println("9 - sair");
+	}
 
-		System.out.println("Digite o tipo do veículo (PEQUENO, MEDIO, SUV):");
-		String tipo = Menu.sc.nextLine();
+	private static void cadastrarVeiculo() {
+		String placa = Menu.obterEntrada("Digite a placa do veículo:");
+
+		String tipo = Menu.obterEntrada("Digite o tipo do veículo (PEQUENO, MEDIO, SUV):");
 
 		TipoVeiculo tipoVeiculo;
 		switch (tipo.toUpperCase()) {
@@ -60,9 +62,10 @@ public class MenuVeiculo {
 			break;
 		default:
 			System.out.println("Tipo de veículo inválido. Usando 'PEQUENO' como padrão.");
+			Menu.sc.nextLine();
 			tipoVeiculo = TipoVeiculo.PEQUENO;
 		}
-		
+
 		Veiculo novoVeiculo = new Veiculo(placa, tipoVeiculo);
 
 		Menu.locadora.getControleVeiculo().cadastrar(novoVeiculo);
@@ -81,8 +84,7 @@ public class MenuVeiculo {
 
 	private static void buscarVeiculo() {
 		try {
-			System.out.print("Digite a placa do veículo:");
-			String placa = Menu.sc.nextLine();
+			String placa = Menu.obterEntrada("Digite a placa do veículo:");
 
 			if (placa == null || placa.isEmpty()) {
 				throw new IllegalArgumentException("A placa do veículo não pode ser vazia.");

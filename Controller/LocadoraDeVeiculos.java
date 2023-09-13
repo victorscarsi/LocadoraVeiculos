@@ -15,6 +15,7 @@ public class LocadoraDeVeiculos {
 		if (veiculo.isAlugado()) {
 			throw new Exception("Veículo já está alugado! Selecione outro.");
 		} else {
+			veiculo.setEstaAlugado(true);
 			Locacao novaLocacao = new Locacao(pessoa, veiculo, agencia, retirada);
 			listaLocacoes.add(novaLocacao);
 		}

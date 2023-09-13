@@ -9,32 +9,31 @@ public class Menu {
 
 	public static void main(String[] args) {
 
-		int opcao = -1;
-		while (opcao != 9) {
+		while (true) {
 			try {
 				menuPrincipal();
-				opcao = Integer.parseInt(sc.nextLine());
+				int opcao = Integer.parseInt(obterEntrada("Por favor escolha uma opção: "));
 
 				switch (opcao) {
-					case 1:
-						MenuPessoa.menuPessoa();
-						break;
+				case 1:
+					MenuPessoa.menuPessoa();
+					break;
 
-					case 2:
-						MenuVeiculo.menuVeiculo();
-						break;
+				case 2:
+					MenuVeiculo.menuVeiculo();
+					break;
 
-					case 3:
-						MenuLocacao.menuLocacao();
-						break;
+				case 3:
+					MenuLocacao.menuLocacao();
+					break;
 
-					case 9:
-						System.out.println("Saindo do sistema");
-						sc.close();
-						System.exit(0);
+				case 9:
+					System.out.println("Saindo do sistema");
+					sc.close();
+					System.exit(0);
 
-					default:
-						System.out.println("Opção Inválida, tente novamente");
+				default:
+					System.out.println("Opção Inválida, tente novamente");
 				}
 			} catch (NumberFormatException e) {
 				System.out.println("Por favor, insira um número válido.");
@@ -43,10 +42,15 @@ public class Menu {
 	}
 
 	private static void menuPrincipal() {
-		System.out.println("\nBem Vindo, por favor escolha uma opção");
+		System.out.println("\n----Menu Principal----");
 		System.out.println("Gerenciar pessoa - 1");
 		System.out.println("Gerenciar veiculo - 2");
 		System.out.println("Gerenciar locações - 3");
 		System.out.println("Sair - 9");
+	}
+
+	public static String obterEntrada(String mensagem) {
+		System.out.print(mensagem);
+		return Menu.sc.nextLine();
 	}
 }

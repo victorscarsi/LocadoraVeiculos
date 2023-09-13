@@ -3,22 +3,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Scanner;
 
 public class MenuLocacao {
 
 	public static void menuLocacao() {
-		int opcao = -1;
-		while (opcao != 4) {
-			System.out.println("----Gerenciar Locação----");
-			System.out.println("Por favor escolha uma opção:");
-			System.out.println("1 - alugar");
-			System.out.println("2 - buscar");
-			System.out.println("3 - listar");
-			System.out.println("4 - Retornar ao menu anterior");
-			System.out.println("9 - sair");
+		while (true) {
+			mostrarMenuLocacao();
 
-			opcao = Integer.parseInt(Menu.sc.nextLine());
+			int opcao = Integer.parseInt(Menu.obterEntrada("Por favor escolha uma opção: "));
 
 			switch (opcao) {
 			case 1:
@@ -31,16 +23,25 @@ public class MenuLocacao {
 				listarLocacoes();
 				break;
 			case 4:
-				break;
+				return;
 			case 9:
 				Menu.sc.close();
 				System.exit(0);
 
 			default:
-				System.out.println("Opção inválida, digite novamente:");
+				System.out.print("Opção inválida, digite novamente: ");
 				break;
 			}
 		}
+	}
+
+	private static void mostrarMenuLocacao() {
+		System.out.println("\n----Gerenciar Locação----");
+		System.out.println("1 - alugar");
+		System.out.println("2 - buscar");
+		System.out.println("3 - listar");
+		System.out.println("4 - Retornar ao menu anterior");
+		System.out.println("9 - sair");
 	}
 
 	private static void listarLocacoes() {
@@ -56,9 +57,7 @@ public class MenuLocacao {
 
 	private static void buscarPeloID() {
 		try {
-			System.out.print("Digite o ID da locação:");
-			Long idLocacao = Menu.sc.nextLong();
-			Menu.sc.nextLine(); 
+			Long idLocacao = Long.parseLong(Menu.obterEntrada("Digite o ID da locação:"));
 
 			Locacao locacao = Menu.locadora.buscarLocacao(idLocacao);
 
@@ -70,62 +69,80 @@ public class MenuLocacao {
 
 		} catch (InputMismatchException e) {
 			System.out.println("Por favor, insira um número válido para o ID da locação.");
-			Menu.sc.nextLine(); 
+			Menu.sc.nextLine();
 		} catch (NullPointerException e) {
 			System.out.println("Ocorreu um erro ao buscar a locação: " + e.getMessage());
+			Menu.sc.nextLine();
 		} catch (Exception e) {
 			System.out.println("Ocorreu um erro inesperado: " + e.getMessage());
+			Menu.sc.nextLine();
 		}
 	}
 
 	private static void novaLocacao() {
-		Scanner leitura = new Scanner(System.in);
 		System.out.println("NOVA LOCAÇÃO");
+		String id = Menu.obterEntrada("Informe o CPF ou CNPJ do cliente: ");
+		Pessoa cliente = buscarCliente(id);
+		if (cliente == null)
+			return;
 
-		System.out.print("Informe o CPF ou CNPJ do cliente: ");
-		String id = leitura.nextLine();
-		Pessoa cliente = Menu.clientes.buscar(id);
+		String placa = Menu.obterEntrada("Informe a placa do veículo: ");
+		Veiculo carro = buscarVeiculo(placa);
+		if (carro == null)
+			return;
+
+		LocalDateTime retirada = obterDataHora("Informe a data e hora da retirada (dd/mm/aaaa hh:mm): ");
+		if (retirada == null)
+			return;
+
+		String agencia = Menu.obterEntrada("Informe a agência de retirada do veículo: ");
+		alugarVeiculo(cliente, carro, agencia, retirada);
+	}
+
+	private static Pessoa buscarCliente(String id) {
+		Pessoa cliente = Menu.locadora.getControlePessoa().buscar(id);
 		if (cliente == null) {
 			System.out.println("Cliente não encontrado! Tente novamente. \n");
-			return;
-		} else {
-			System.out.println(cliente.toString());
-			System.out.println();
+			return null;
+		}
+		System.out.println(cliente.toString());
+		System.out.println();
+		return cliente;
+	}
 
-			System.out.print("Informe a placa do veículo: ");
-			String placa = leitura.nextLine();
-			Veiculo carro = Menu.veiculos.buscar(placa);
-			if (placa == null) {
-				System.out.println("Cliente não encontrado! Tente novamente. \n");
-				return;
-			} else {
-				System.out.println(carro.toString());
-				System.out.println();
+	private static Veiculo buscarVeiculo(String placa) {
+		Veiculo carro = Menu.locadora.getControleVeiculo().buscar(placa);
+		if (carro == null) {
+			System.out.println("Veiculo não encontrado! Tente novamente. \n");
+			return null;
+		}
+		System.out.println(carro.toString());
+		System.out.println();
+		return carro;
+	}
 
-				System.out.print("Informe a data e hora da retirada (dd/mm/aaaa hh:mm): ");
-				String dataHora = leitura.nextLine();
-				LocalDateTime retirada = null;
-				try {
-					retirada = LocalDateTime.parse(dataHora, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-				} catch (Exception e) {
-					System.out.println("Data/hora em formato inválido! \n");
-					return;
-				}
-				if (ChronoUnit.MINUTES.between(retirada, LocalDateTime.now()) < 0) {
-					System.out.println("Impossível retirar um veículo com data futura!\n");
-					return;
-				} else {
-					System.out.print("Informe a agência de retirada do veículo: ");
-					String agencia = leitura.nextLine();
-
-					try {
-						Menu.locadora.alugar(cliente, carro, agencia, retirada);
-					} catch (Exception e) {
-						System.out.println("Ooops, algo deu errado! Tente novamente. \n");
-						return;
-					}
-				}
+	private static LocalDateTime obterDataHora(String mensagem) {
+		String dataHora = Menu.obterEntrada(mensagem);
+		LocalDateTime retirada;
+		try {
+			retirada = LocalDateTime.parse(dataHora, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+			if (ChronoUnit.MINUTES.between(retirada, LocalDateTime.now()) < 0) {
+				System.out.println("Impossível retirar um veículo com data futura!\n");
+				return null;
 			}
+			return retirada;
+		} catch (Exception e) {
+			System.out.println("Data/hora em formato inválido! \n");
+			return null;
 		}
 	}
+
+	private static void alugarVeiculo(Pessoa cliente, Veiculo carro, String agencia, LocalDateTime retirada) {
+		try {
+			Menu.locadora.alugar(cliente, carro, agencia, retirada);
+		} catch (Exception e) {
+			System.out.println("Ooops, algo deu errado! Tente novamente. \n");
+		}
+	}
+
 }

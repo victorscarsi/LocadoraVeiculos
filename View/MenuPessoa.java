@@ -3,24 +3,19 @@ import java.util.List;
 public class MenuPessoa {
 	public static void menuPessoa() {
 		while (true) {
-			System.out.println("----Gerenciar pessoa----");
-			System.out.println("Por favor escolha uma opção:");
-			System.out.println("1 - cadastrar");
-			System.out.println("2 - buscar");
-			System.out.println("3 - alterar");
-			System.out.println("4 - listar");
-			System.out.println("5 - Retornar ao menu anterior");
-			System.out.println("9 - sair");
+			mostrarMenuPessoa();
 
-			int opcao = Integer.parseInt(Menu.sc.nextLine());
+			int opcao = Integer.parseInt(Menu.obterEntrada("Por favor escolha uma opção: "));
 
 			switch (opcao) {
 			case 1:
 				cadastrarPessoa();
 				break;
+
 			case 2:
 				buscarPessoaID();
 				break;
+
 			case 3:
 				alterarPessoa();
 				break;
@@ -28,38 +23,49 @@ public class MenuPessoa {
 			case 4:
 				listarPessoas();
 				break;
+
 			case 5:
 				return;
+
 			case 9:
 				Menu.sc.close();
 				System.exit(0);
+
 			default:
-				System.out.println("Opção inválida, digite novamente:");
+				System.out.println("Opção inválida, digite novamente: ");
 				break;
 			}
 		}
 	}
 
+	private static void mostrarMenuPessoa() {
+		System.out.println("\n----Gerenciar pessoa----");
+		System.out.println("Por favor escolha uma opção:");
+		System.out.println("1 - cadastrar");
+		System.out.println("2 - buscar");
+		System.out.println("3 - alterar");
+		System.out.println("4 - listar");
+		System.out.println("5 - Retornar ao menu anterior");
+		System.out.println("9 - sair");
+	}
+
 	private static void alterarPessoa() {
 		try {
-			System.out.print("Digite o CPF ou CNPJ da pessoa que deseja alterar: ");
-			String novoId = Menu.sc.nextLine();
+			String novoId = Menu.obterEntrada("Digite o CPF ou CNPJ da pessoa que deseja alterar: ");
 
 			if (novoId == null || novoId.isEmpty()) {
 				throw new IllegalArgumentException("CPF ou CNPJ não pode ser vazio.");
 			}
-
 			Pessoa pessoaParaAlterar = Menu.locadora.getControlePessoa().buscar(novoId);
 
 			if (pessoaParaAlterar != null) {
-				System.out.print("Novo endereço: ");
-				String novoEndereco = Menu.sc.nextLine();
+
+				String novoEndereco = Menu.obterEntrada("Novo endereço: ");
 				if (novoEndereco == null || novoEndereco.isEmpty()) {
 					throw new IllegalArgumentException("Endereço não pode ser vazio.");
 				}
 
-				System.out.print("Novo contato: ");
-				String novoContato = Menu.sc.nextLine();
+				String novoContato = Menu.obterEntrada("Novo contato: ");
 				if (novoContato == null || novoContato.isEmpty()) {
 					throw new IllegalArgumentException("Contato não pode ser vazio.");
 				}
@@ -91,8 +97,7 @@ public class MenuPessoa {
 
 	private static void buscarPessoaID() {
 		try {
-			System.out.print("Digite o cpf ou cnpj da pessoa:");
-			String id = Menu.sc.nextLine();
+			String id = Menu.obterEntrada("Digite o cpf ou cnpj da pessoa:");
 
 			if (id == null || id.isEmpty()) {
 				throw new IllegalArgumentException("CPF ou CNPJ não pode ser vazio.");
@@ -116,26 +121,22 @@ public class MenuPessoa {
 
 	public static void cadastrarPessoa() {
 		try {
-			System.out.print("CPF ou CNPJ da pessoa: ");
-			String id = Menu.sc.nextLine();
+			String id = Menu.obterEntrada("CPF ou CNPJ da pessoa: ");
 			if (id == null || id.isEmpty()) {
 				throw new IllegalArgumentException("CPF ou CNPJ não pode ser vazio.");
 			}
 
-			System.out.print("Nome da pessoa: ");
-			String nome = Menu.sc.nextLine();
+			String nome = Menu.obterEntrada("Nome da pessoa: ");
 			if (nome == null || nome.isEmpty()) {
 				throw new IllegalArgumentException("Nome não pode ser vazio.");
 			}
 
-			System.out.print("Contato da pessoa: ");
-			String contato = Menu.sc.nextLine();
+			String contato = Menu.obterEntrada("Contato da pessoa: ");
 			if (contato == null || contato.isEmpty()) {
 				throw new IllegalArgumentException("Contato não pode ser vazio.");
 			}
 
-			System.out.print("Endereço da pessoa: ");
-			String endereco = Menu.sc.nextLine();
+			String endereco = Menu.obterEntrada("Endereço da pessoa: ");
 			if (endereco == null || endereco.isEmpty()) {
 				throw new IllegalArgumentException("Endereço não pode ser vazio.");
 			}
@@ -144,6 +145,7 @@ public class MenuPessoa {
 			Pessoa pessoaExistente = Menu.locadora.getControlePessoa().buscar(id);
 			if (pessoaExistente != null) {
 				System.out.println("Pessoa já cadastrada com este CPF ou CNPJ.");
+				Menu.sc.nextLine();
 			} else {
 				Pessoa novaPessoa;
 				if (id.length() == 11) { // CPF tem 11 caracteres
