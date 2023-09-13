@@ -19,7 +19,7 @@ public class PessoaFisica extends Pessoa {
     // Implementação do método toString para PessoaFisica
     @Override
     public String toString() {
-        return "PessoaFisica [cpf=" + cpf + ", nome=" + getNome() + ", contato=" + getContato() + ", endereco=" + getEndereco() + "]";
+        return "Pessoa Física | cpf = " + cpf + " | nome = " + getNome() + " | contato = " + getContato() + " | endereço = " + getEndereco();
     }
 }
 

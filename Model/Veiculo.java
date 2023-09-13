@@ -46,6 +46,6 @@ public class Veiculo {
     // Método toString para representar o veículo como uma String
     @Override
     public String toString() {
-        return "Veiculo [placa=" + placa + ", estaAlugado=" + estaAlugado + ", tipo=" + tipo + "]";
+        return "Veiculo | placa = " + placa + " | estaAlugado=" + estaAlugado + " | tipo=" + tipo;
     }
 }

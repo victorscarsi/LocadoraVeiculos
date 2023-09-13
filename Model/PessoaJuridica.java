@@ -19,6 +19,6 @@ public class PessoaJuridica extends Pessoa {
     // Implementação do método toString para PessoaJuridica
     @Override
     public String toString() {
-        return "PessoaJuridica [cnpj=" + cnpj + ", nome=" + getNome() + ", contato=" + getContato() + ", endereco=" + getEndereco() + "]";
+        return "Pessoa Jurídica | cnpj = " + cnpj + " | nome = " + getNome() + " | contato = " + getContato() + " | endereço = " + getEndereco();
     }
 }

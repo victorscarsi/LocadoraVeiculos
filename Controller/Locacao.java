@@ -1,6 +1,7 @@
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.time.format.DateTimeFormatter;
 
 public class Locacao {
 	private static long idGlobal = 0;
@@ -100,16 +101,22 @@ public class Locacao {
 
 	@Override
 	public String toString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); // Formato personalizado
+		String formattedRetirada = retirada.format(formatter); // Formate a data e hora de retirada
+
 		String dadosLocacao = "--------------" + "\nIdentificador: " + this.idLocacao + "\nLocatário....: "
 				+ this.locatario.toString() + "\nVeículo......: " + this.veiculo.toString() + "\nRetirada.....: "
-				+ this.retirada.toString();
+				+ formattedRetirada; // Use a data e hora formatada
+
 		if (this.locacaoFinalizada) {
-			dadosLocacao += "\nDevolução....: " + this.devolucao.toString() + "\nValor Total..: R$ " + this.valorTotal
+			String formattedDevolucao = devolucao.format(formatter); // Formate a data e hora de devolução
+			dadosLocacao += "\nDevolução....: " + formattedDevolucao + "\nValor Total..: R$ " + this.valorTotal
 					+ "\n--------------";
 		} else {
 			dadosLocacao += "\nDevolução....: Locação em Andamento" + "\nValor Total..: A processar"
 					+ "\n--------------";
 		}
+
 		return dadosLocacao;
 	}
 
